@@ -25,19 +25,28 @@
   handleNavScroll();
 
   /* ---------- NAVIGATION — MOBILE TOGGLE ---------- */
+  const setMenuOpen = (open) => {
+    navToggle.classList.toggle('active', open);
+    navLinks.classList.toggle('active', open);
+    nav.classList.toggle('nav--menu-open', open);
+    document.body.style.overflow = open ? 'hidden' : '';
+  };
+
   navToggle.addEventListener('click', () => {
-    navToggle.classList.toggle('active');
-    navLinks.classList.toggle('active');
-    document.body.style.overflow = navLinks.classList.contains('active') ? 'hidden' : '';
+    setMenuOpen(!navLinks.classList.contains('active'));
   });
 
   // Close mobile menu on link click
   navLinks.querySelectorAll('a').forEach(link => {
     link.addEventListener('click', () => {
-      navToggle.classList.remove('active');
-      navLinks.classList.remove('active');
-      document.body.style.overflow = '';
+      setMenuOpen(false);
     });
+  });
+
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 768 && navLinks.classList.contains('active')) {
+      setMenuOpen(false);
+    }
   });
 
   /* ---------- SCROLL REVEAL (Intersection Observer) ---------- */
