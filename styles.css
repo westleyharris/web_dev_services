@@ -1355,6 +1355,23 @@ button, input, textarea, select {
     display: flex;
   }
 
+  .hero__content {
+    width: 100%;
+  }
+
+  .hero__title {
+    align-items: center;
+    text-align: center;
+  }
+
+  .hero__title-line {
+    justify-content: center;
+  }
+
+  .hero__title-gradient {
+    text-wrap: balance;
+  }
+
   .hero__stats {
     gap: 24px;
   }
