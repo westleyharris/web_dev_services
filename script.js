@@ -177,12 +177,24 @@
     heroObserver.observe(heroCanvas.parentElement);
   }
 
-  /* ---------- CARD MOUSE GLOW EFFECT ---------- */
+  /* ---------- SERVICE CARD 3D TILT + GLOW ---------- */
   document.querySelectorAll('.service-card').forEach(card => {
     card.addEventListener('mousemove', (e) => {
       const rect = card.getBoundingClientRect();
-      card.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
-      card.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+      const rotateX = ((y - centerY) / centerY) * -8;
+      const rotateY = ((x - centerX) / centerX) * 8;
+
+      card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
+      card.style.setProperty('--mouse-x', `${x}px`);
+      card.style.setProperty('--mouse-y', `${y}px`);
+    });
+
+    card.addEventListener('mouseleave', () => {
+      card.style.transform = '';
     });
   });
 
@@ -240,6 +252,12 @@
       }, 3000);
     });
   }
+
+  /* ---------- HERO TEXT SCRAMBLE EFFECT ---------- */
+  // Moved to inline script in index.html for reliability
+
+  /* ---------- TESTIMONIAL READ MORE TOGGLE ---------- */
+  // Uses toggleTestimonial() defined globally on window (see index.html)
 
   /* ---------- ACTIVE NAV LINK HIGHLIGHT ---------- */
   const sections = document.querySelectorAll('section[id]');

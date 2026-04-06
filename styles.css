@@ -327,14 +327,37 @@ button, input, textarea, select {
 }
 
 .hero__title {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  row-gap: 0.08em;
   font-size: clamp(2.5rem, 6vw, 4.5rem);
   font-weight: 800;
-  line-height: 1.1;
+  line-height: 1.05;
   letter-spacing: -0.03em;
   margin-bottom: 24px;
+  text-align: left;
+}
+
+.hero__title-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  line-height: 1.05;
+}
+
+.hero__title-prefix {
+  flex: 0 0 auto;
+}
+
+.hero__word {
+  flex: 0 1 auto;
+  min-width: 0;
+  margin-left: 0.33em;
 }
 
 .hero__title-gradient {
+  line-height: 1.05;
   background: var(--accent-gradient);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -457,6 +480,129 @@ button, input, textarea, select {
 }
 
 /* =============================================
+   HERO TEXT SCRAMBLE
+   ============================================= */
+.hero__scramble {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0;
+}
+
+.hero__scramble__text {
+  background: var(--accent-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero__scramble::after {
+  content: '|';
+  -webkit-text-fill-color: var(--accent-light);
+  animation: blink 0.8s step-end infinite;
+  font-weight: 300;
+}
+
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+/* =============================================
+   TECH MARQUEE
+   ============================================= */
+.marquee {
+  overflow: hidden;
+  padding: 32px 0;
+  border-top: 1px solid var(--border-glass);
+  border-bottom: 1px solid var(--border-glass);
+  background: var(--bg-secondary);
+  position: relative;
+}
+
+.marquee::before,
+.marquee::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 120px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.marquee::before {
+  left: 0;
+  background: linear-gradient(to right, var(--bg-secondary), transparent);
+}
+
+.marquee::after {
+  right: 0;
+  background: linear-gradient(to left, var(--bg-secondary), transparent);
+}
+
+.marquee__track {
+  display: flex;
+  width: max-content;
+  animation: marqueeScroll 30s linear infinite;
+}
+
+.marquee__track:hover {
+  animation-play-state: paused;
+}
+
+.marquee__content {
+  display: flex;
+  gap: 48px;
+  padding-right: 48px;
+  flex-shrink: 0;
+}
+
+.marquee__item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  white-space: nowrap;
+  transition: color 0.3s ease;
+  cursor: default;
+  letter-spacing: 0.02em;
+}
+
+.marquee__item:hover {
+  color: var(--accent-light);
+}
+
+.marquee__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: rgba(124, 92, 255, 0.08);
+  border: 1px solid rgba(124, 92, 255, 0.12);
+  color: var(--accent-light);
+  font-size: 0.7rem;
+  font-weight: 700;
+  transition: all 0.3s ease;
+}
+
+.marquee__item:hover .marquee__icon {
+  background: rgba(124, 92, 255, 0.15);
+  border-color: rgba(124, 92, 255, 0.3);
+  transform: scale(1.1);
+  box-shadow: 0 4px 16px var(--accent-glow);
+}
+
+@keyframes marqueeScroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* =============================================
    SECTIONS — SHARED
    ============================================= */
 .section {
@@ -511,6 +657,7 @@ button, input, textarea, select {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 24px;
+  perspective: 1000px;
 }
 
 .service-card {
@@ -519,8 +666,10 @@ button, input, textarea, select {
   border-radius: var(--radius);
   background: var(--bg-card);
   border: 1px solid var(--border-glass);
-  transition: all 0.4s var(--ease-out);
+  transition: all 0.4s var(--ease-out), transform 0.15s ease-out;
   overflow: hidden;
+  transform-style: preserve-3d;
+  will-change: transform;
 }
 
 .service-card::before {
@@ -812,8 +961,14 @@ button, input, textarea, select {
    ============================================= */
 .testimonials__grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(2, 1fr);
   gap: 24px;
+}
+
+@media (max-width: 768px) {
+  .testimonials__grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .testimonial-card {
@@ -822,6 +977,8 @@ button, input, textarea, select {
   background: var(--bg-card);
   border: 1px solid var(--border-glass);
   transition: all 0.4s var(--ease-out);
+  display: flex;
+  flex-direction: column;
 }
 
 .testimonial-card:hover {
@@ -837,11 +994,55 @@ button, input, textarea, select {
   margin-bottom: 16px;
 }
 
+.testimonial-card__quote {
+  position: relative;
+  max-height: 160px;
+  overflow: hidden;
+  transition: max-height 0.5s var(--ease-out);
+  flex: 1;
+}
+
+.testimonial-card__quote::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 50px;
+  background: linear-gradient(to bottom, transparent, var(--bg-primary));
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.testimonial-card.expanded .testimonial-card__quote {
+  max-height: 600px;
+}
+
+.testimonial-card.expanded .testimonial-card__quote::after {
+  opacity: 0;
+}
+
+.testimonial-card__toggle {
+  background: none;
+  border: none;
+  color: var(--accent-light);
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 8px 0;
+  margin-bottom: 16px;
+  text-align: left;
+  transition: color 0.3s ease;
+}
+
+.testimonial-card__toggle:hover {
+  color: var(--text-primary);
+}
+
 .testimonial-card blockquote {
   font-size: 0.95rem;
   line-height: 1.7;
   color: var(--text-secondary);
-  margin-bottom: 24px;
   font-style: italic;
 }
 
